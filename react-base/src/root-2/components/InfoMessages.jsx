@@ -1,5 +1,5 @@
 import React from "react";
-import Message from "./Message";
+import { Message } from "./Message";
 
 export default function InfoMessages() {
     return (
@@ -11,3 +11,5 @@ export default function InfoMessages() {
         </div>
     )
 }
+
+// Данный компонент показывает, как использовать дефолтный экспорт и именованный импорт (import { Message } from "./Message";)
