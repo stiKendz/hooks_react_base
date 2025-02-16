@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
 import AppTwo from './root-2/AppTwo'
+import PropsApp from './root-3-props/PropsApp'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,5 +14,12 @@ createRoot(document.getElementById('root')).render(
 createRoot(document.getElementById('root-2')).render(
   <StrictMode>
     <AppTwo />
+  </StrictMode>,
+)
+
+// Третий набор компонентов (пропсы)
+createRoot(document.getElementById('root-3-props')).render(
+  <StrictMode>
+    <PropsApp />
   </StrictMode>,
 )
