@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App'
 import AppTwo from './root-2/AppTwo'
 import PropsApp from './root-3-props/PropsApp'
+import AppFourRendering from './root-4-rendering/AppFourRendering'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -22,4 +23,11 @@ createRoot(document.getElementById('root-3-props')).render(
   <StrictMode>
     <PropsApp />
   </StrictMode>,
+)
+
+// Четвертый набор компонентов (рендеринг)
+createRoot(document.getElementById('root-4-rendering')).render(
+  <StrictMode>
+    <AppFourRendering />
+  </StrictMode>
 )
