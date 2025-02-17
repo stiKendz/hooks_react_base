@@ -1,6 +1,6 @@
 import React from "react";
 
-function ParamsForParams({ person, size }) {
+function ParamsForParams({ person, size = 100 }) {
     return(
         <>
             <img 
@@ -10,7 +10,6 @@ function ParamsForParams({ person, size }) {
                 width={size}
                 height={size}
             >
-
             </img>
         </>
     );
@@ -41,7 +40,41 @@ export default function Params() {
                     }}
                     size={25}
                 />
-                
+                <ParamsForParams 
+                    person={{
+                        name: 'Semenov',
+                        surname: 'Sisters'
+                    }}
+                />
+            </div>
+        </>
+    );
+};
+
+// можно передать пропсы так
+function Profile(person, size, isSepia, thickBorder) {
+    return(
+        <>
+            <div className="main-card">
+                <Avatar
+                    person = {person}
+                    size = {size}
+                    isSepia = {isSepia}
+                    thickBorder = {thickBorder}
+                />
+            </div>
+        </>
+    );
+};
+
+// или вот так
+function LikelyProfile(props) {
+    return(
+        <>
+            <div className="main-card">
+                <Avatar 
+                    {...props}
+                />
             </div>
         </>
     );
