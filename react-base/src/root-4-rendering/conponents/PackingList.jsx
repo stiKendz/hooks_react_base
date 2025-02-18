@@ -61,7 +61,7 @@ function ShortItem({ name, isPacked }) {
     );
 };
 
-// itemContent = name + ' Yes✅' --- работает не только для текста, но и для JSX
+// itemContent = name + ' Yes✅' --- работает не только для текста, но и для JSX (записывается по иному)
 function ShortItemJsx({ name, isPacked }) {
     let itemContent = name;
     if (isPacked) {
