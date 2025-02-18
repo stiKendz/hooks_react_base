@@ -11,8 +11,74 @@ function Item({ name, isPacked }) {
 
 // или используя тернарный оператор
 function TernaryItem({ name, isPacked }) {
-    {isPacked ? name + '--Yes✅--' : name + '--No--'}
+    return (
+        <li className="item">
+            {isPacked ? name + ' --Yes✅-- ' : name + ' --No-- '}
+        </li>
+    );
 };
+
+// можно подключить теги
+function TagItem({ name, isPacked }) {
+    return(
+        <li className="item">
+            {isPacked ? (
+                <del>
+                    {name + 'Yes✅'}
+                </del>
+            ) : (
+                name
+            )}
+        </li>
+    );
+};
+
+// логическое И
+function LogicalAnd({ name, isPacked }) {
+    return(
+        <li className="item">
+            {name} {isPacked && 'Yes✅'} 
+        </li>
+    );
+};
+// {name} --- name-название пункта из меню, 
+// {isPacked && 'Yes✅'} --- если isPacked true => рендеринг ✅, если false => ничего не рендерить 
+
+// JSX шорткаты (срезки)
+// этот вариант более нагруженный и многословный, но при этом достаточно гибкий
+function ShortItem({ name, isPacked }) {
+    // описание условий, функций, переменных
+    let itemContent = name;
+    if (isPacked) {
+        itemContent = name + ' Yes✅'
+    }
+
+    // работа с переменными, функциями, результатами условий и рендеринг элементов (return-часть) 
+    return(
+        <li className="item">
+            {itemContent}
+        </li>
+    );
+};
+
+// itemContent = name + ' Yes✅' --- работает не только для текста, но и для JSX
+function ShortItemJsx({ name, isPacked }) {
+    let itemContent = name;
+    if (isPacked) {
+        itemContent = (
+            <del>
+                {name + " Yes✅"}
+            </del>
+        );
+    };
+
+    return(
+        <li className="item">
+            {itemContent}
+        </li>
+    );
+};
+// тег <del></del> - зачеркивает текст
 
 function NullAllItems({ name, isPacked }) {
     if (isPacked) {
@@ -26,24 +92,28 @@ export default function PackingList() {
         <>
             <h2>Какой-то список</h2>
             <ul className="normal-items">
-                <Item 
+                <ShortItemJsx 
                     name='Творожный сырок'
                     isPacked={ true }  
                 />
-                <Item 
+                <ShortItemJsx 
                     name="Солнце"
                     isPacked={ true }
                 />
-                <Item 
+                <ShortItemJsx 
                     name="Луна"
                     isPacked={ false }  
                 />
-                <Item 
+                <ShortItemJsx 
                     name="Море"
                     isPacked={ true }  
                 />
-                <Item 
+                <ShortItemJsx 
                     name="Пиво"
+                    isPacked={ false }  
+                />
+                <ShortItemJsx 
+                    name="Рыба"
                     isPacked={ false }  
                 />
             </ul>
