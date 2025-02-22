@@ -14,6 +14,11 @@ import { TrafficLight } from './components/RenderSnapshots';
 
 import PreRenderUpdates from './components/PreRenderUpdates';
 
+import UpdateObjects from './components/UpdateObjects';
+import { MovingDot } from './components/UpdateObjects';
+import { PersonForm } from './components/UpdateObjects';
+import { NestedObjectUpdate } from './components/UpdateObjects';
+
 function App() {
   return(
     <>
@@ -52,8 +57,21 @@ function App() {
         <TrafficLight />
         <hr></hr>
         <h1>Работа над данными перед рендерингом</h1>
-        <h2>Правильные счетчики</h2>
+        <h2>Правильные счетчики - работа с рендерингом и данными</h2>
         <PreRenderUpdates />
+        <hr></hr>
+        <h1>Работа с объектами в состояниях</h1>
+        <h2>Мутация объектов в примере ниже</h2>
+        <UpdateObjects />
+        <hr></hr>
+        <h2>Перемещающаяся точка</h2>
+        <MovingDot />
+        <hr></hr>
+        <h2>Копирование объектов с синтаксисом ...</h2>
+        <PersonForm />
+        <hr></hr>
+        <h2>Демонстрация работы обновления вложенного объекта, работы с вложенным объектом</h2>
+        <NestedObjectUpdate />
       </div>
     </>
   );
