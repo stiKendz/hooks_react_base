@@ -22,6 +22,8 @@ import { UpdateArraysInState } from './components/UpdateObjects';
 import { RemovingItemsFromArray } from './components/UpdateObjects';
 import { TransformArray } from './components/UpdateObjects';
 import { ReplacingItemsInArray } from './components/UpdateObjects';
+import { InsertIntoArray } from './components/UpdateObjects';
+import { ReverseArray } from './components/UpdateObjects';
 
 function App() {
   return(
@@ -65,7 +67,7 @@ function App() {
         <PreRenderUpdates />
         <hr></hr>
         <h1>Работа с объектами в состояниях</h1>
-        <h2>Мутация объектов в примере ниже</h2>
+        <h2>Мутация объектов в примере - ниже</h2>
         <UpdateObjects />
         <hr></hr>
         <h2>Перемещающаяся точка</h2>
@@ -78,17 +80,23 @@ function App() {
         <NestedObjectUpdate />
         <hr></hr>
         <h1>Работа и обновление массива в состоянии</h1>
-        <h2>Обновление, добавление элементов массива ниже</h2>
+        <h2>Обновление, добавление элементов массива - ниже</h2>
         <UpdateArraysInState />
         <hr></hr>
-        <h2>Удаление элементов из массива ниже</h2>
+        <h2>Удаление элементов из массива - ниже</h2>
         <RemovingItemsFromArray />
         <hr></hr>
-        <h2>Изменение элементов в массиве ниже</h2>
+        <h2>Изменение элементов в массиве - ниже</h2>
         <TransformArray />
         <hr></hr>
-        <h2>Замена элементов в массиве ниже</h2>
+        <h2>Замена элементов в массиве - ниже</h2>
         <ReplacingItemsInArray />
+        <hr></hr>
+        <h2>Вставка элементов в массив - ниже</h2>
+        <InsertIntoArray />
+        <hr></hr>
+        <h2>Переворот массива ниже</h2>
+        <ReverseArray />
       </div>
     </>
   );

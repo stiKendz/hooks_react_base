@@ -462,7 +462,7 @@ export function ReplacingItemsInArray() {
             <div className="replacing-items-container">
                 <ul>
                     {counters.map((counter, i ) => (
-                        <li key={counter.id}>
+                        <li key={i}>
                             {counter}
                             <button onClick={() => {
                                 handleIncrementClick(i)
@@ -476,3 +476,80 @@ export function ReplacingItemsInArray() {
     )
 }
 // counters.map((c, i) - c - сам элемент(counter), i - его индекс
+
+// Вставка элементов в массив
+let nextId = 3;
+const initialArtists = [
+    {id: 0, name: 'Artist-One'},
+    {id: 1, name: 'Artist-Two'},
+    {id: 2, name: 'Artist-Three'},
+];
+
+export function InsertIntoArray() {
+    const [name, setName] = useState('');
+    const [artists, setArtists] = useState(initialArtists);
+
+    function handleClick() {
+        const insertAt = 1; // id для первого нового (добавленного) элемента
+        const nextArtists = [
+            ...artists.slice(0, insertAt), // обрезка массива между первым значением, и новым.
+            { id: nextId++, name: name }, // увеличение id всех новых элементов на 1, за каждый новый элемент
+            ...artists.slice(insertAt), // пока что не понял, зачем эта строка нужна
+        ];
+        setArtists(nextArtists);
+        setName('');
+    }
+
+    return (
+        <>
+            <div className="insert-array-container">
+                <h3>Скульпторы</h3>
+                <input 
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
+                <button onClick={handleClick}>Ввести</button>
+                <ul>
+                    {artists.map((artist) => (
+                        <li key={artist.id}>{artist.name}</li>
+                    ))}
+                </ul>
+            </div>
+        </>
+    );
+};
+
+// Внесение других элементов, изменений в массив
+// Можно развернуть или отсортировать массив. 
+// Методы JavaScript reverse() и sort() мутируют исходный массив, поэтому мы не можем использовать их напрямую.
+// Однако можно сначала скопировать массив, а затем внести в него изменения.
+export function ReverseArray() {
+    let nextId = 3;
+    const initialList = [
+        { id: 0, title: 'Big Bellies' },
+        { id: 1, title: 'Lunar Landscape' },
+        { id: 2, title: 'Terracotta Army' },
+    ];
+
+    const [list, setList] = useState(initialList);
+
+    function handleClick() {
+        const nextList = [...list]; // Создаем копию исходного массива, дабы избежать мутирования
+        nextList.reverse(); // Переворачиваем массив
+        setList(nextList); // Обновляем состояние - убираем старый массив, добавляем новый
+    }
+
+    return (
+        <>
+            <button onClick={handleClick}>Перевернуть массив</button>
+            <ul>
+                {list.map((artwork) => (
+                    <li key={artwork.id}>{artwork.title}</li>
+                ))}
+            </ul>
+        </>
+    );
+};
+// Жаже если мы копируем массив, мы не можем изменять существующие элементы внутри массива напрямую. 
+// Это происходит потому, что копирование неглубокое - новый массив будет содержать те же элементы, что и исходный.
+// Если попытаться изменить массив при таких обстоятельствах, произойдет мутация. 
