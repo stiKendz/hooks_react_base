@@ -18,6 +18,10 @@ import UpdateObjects from './components/UpdateObjects';
 import { MovingDot } from './components/UpdateObjects';
 import { PersonForm } from './components/UpdateObjects';
 import { NestedObjectUpdate } from './components/UpdateObjects';
+import { UpdateArraysInState } from './components/UpdateObjects';
+import { RemovingItemsFromArray } from './components/UpdateObjects';
+import { TransformArray } from './components/UpdateObjects';
+import { ReplacingItemsInArray } from './components/UpdateObjects';
 
 function App() {
   return(
@@ -72,6 +76,19 @@ function App() {
         <hr></hr>
         <h2>Демонстрация работы обновления вложенного объекта, работы с вложенным объектом</h2>
         <NestedObjectUpdate />
+        <hr></hr>
+        <h1>Работа и обновление массива в состоянии</h1>
+        <h2>Обновление, добавление элементов массива ниже</h2>
+        <UpdateArraysInState />
+        <hr></hr>
+        <h2>Удаление элементов из массива ниже</h2>
+        <RemovingItemsFromArray />
+        <hr></hr>
+        <h2>Изменение элементов в массиве ниже</h2>
+        <TransformArray />
+        <hr></hr>
+        <h2>Замена элементов в массиве ниже</h2>
+        <ReplacingItemsInArray />
       </div>
     </>
   );
