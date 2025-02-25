@@ -25,6 +25,7 @@ import { ReplacingItemsInArray } from './components/UpdateObjects';
 import { InsertIntoArray } from './components/UpdateObjects';
 import { ReverseArray } from './components/UpdateObjects';
 import { UpdateObjectsInsideArray } from './components/UpdateObjects';
+import { ImmerExample } from './components/UpdateObjects';
 
 function App() {
   return(
@@ -101,6 +102,9 @@ function App() {
         <hr></hr>
         <h2>Изменение объектов внутри массива ниже</h2>
         <UpdateObjectsInsideArray />
+        <hr></hr>
+        <h2>Изменение объектов с помощью immer</h2>
+        <ImmerExample />
       </div>
     </>
   );

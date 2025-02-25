@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useImmer } from 'use-immer';
 
 // Состояние может хранить любые значения JavaScript, включая объекты
 // Мы не должны изменять объекты, которые хранятся в состоянии React, напрямую. 
@@ -559,7 +560,7 @@ export function ReverseArray() {
 // nextList[0].seen = true; // Мутириует list[0]
 // setList(nextList);
 
-
+// Пример работы с массивами, изменением их свойств и объектов внутри них
 export function UpdateObjectsInsideArray() {
     let nextId = 3;
     const initialList = [
@@ -572,21 +573,47 @@ export function UpdateObjectsInsideArray() {
     const [yourList, setYourList] = useState(initialList);
 
     function handleToggleMyList(artworkId, nextSeen) {
-        const myNextList = [...myList];
-        const artwork = myNextList.find(
-            a => a.id === artworkId
+        // const myNextList = [...myList]; // Будет возникать мутация, т.к элементы являются теми же, что и в исходном массиве -
+        // const artwork = myNextList.find( // - myList, => artworks.seen изменяет оригинальный элемент, этот элемент находится в -
+        //     a => a.id === artworkId // - yourList => изменяется (мутирует) ещё и yourList, чего быть не должно
+        // );
+        // artwork.seen = nextSeen;
+
+        // Можно использовать map() для замены старого элемента на его новую версию, избегая мутации состояния.
+        // Ошибка будет исправлена
+        setMyList(
+            myList.map((artwork) => {
+                if (artwork.id === artworkId) {
+                    // Создаем новый объект с изменениями
+                    return { ...artwork, seen: nextSeen };
+                } else {
+                    // Оставляем всё без изменений 
+                    return artwork;
+                }
+            })
         );
-        artwork.seen = nextSeen;
-        setMyList(myNextList);
     };
 
     function handleToggleYourList(artworkId, nextSeen) {
-        const yourNextList = [...yourList];
-        const artwork = yourNextList.find(
-            a => a.id === artworkId
+        // const yourNextList = [...yourList]; // Будет возникать мутация, т.к элементы являются теми же, что и в исходном массиве -
+        // const artwork = yourNextList.find( // - myList, => artworks.seen изменяет оригинальный элемент, этот элемент находится в -
+        //     a => a.id === artworkId // - yourList => изменияется (мутирует) ещё и yourList, чего быть не должно
+        // );
+        // artwork.seen = nextSeen;
+
+        // Можно использовать map() для замены старого элемента на его новую версию, избегая мутации состояния.
+        // Ошибка будет исправлена
+        setYourList(
+            yourList.map((artwork) => {
+                if (artwork.id === artworkId) {
+                    // Создаем новый объект с изменениями
+                    return {...artwork, seen: nextSeen}
+                } else {
+                    // Оставляем всё без изменений
+                    return artwork;
+                }
+            })
         );
-        artwork.seen = nextSeen;
-        setYourList(yourNextList);
     };
 
     return (
@@ -630,5 +657,80 @@ function ItemList({ artworks, onToggle }) {
           </li>
         ))}
       </ul>
+    );
+}
+// Мы должны мутировать только те объекты, в которых мы что-либо создали.
+// Если мы вставляем новый объект, мы можем мутировать его, но если мы работаем с тем, что уже находится в состоянии,
+// мы должны сделать копию
+
+// Лаконичная логика обновлений, используя immer
+// Если наши объекты состояния слишком глубокие, можно их перестроить, чтобы они были плоские.(позже будет описываться)
+// Если мы не хотимменять структуру состояний, проще использовать immer,который заотится о создании копий за нас, и позволяет -
+// - писать более удобный, но мутирующий синтакисис.
+export function ImmerExample() {
+    let nextId = 3;
+    const initialList = [
+        { id: 0, title: 'Солнечное затмение', seen: false },
+        { id: 1, title: 'Лунное затмение', seen: false },
+        { id: 2, title: 'Северое сияние', seen: true },
+    ];
+
+    const [myList, updateMyList] = useImmer(initialList);
+    const [yourList, updateYourList] = useImmer(initialList); 
+
+    function handleToggleMyList(id, nextSeen) {
+        updateMyList((draft) => {   
+            const artwork = draft.find((a) => a.id === id);
+            artwork.seen = nextSeen;
+        })
+    }
+
+    function handleToggleYourList(artworkId, nextSeen) {
+        updateYourList((draft) => {
+            const artwork = draft.find(
+                (a) => a.id === artworkId
+            );
+            artwork.seen = nextSeen;
+        });
+    }
+
+    return (
+        <>
+            <h1>Art Bucket List</h1>
+            <h2>My list of art to see:</h2>
+            <ItemListTwo
+                artworks={myList}
+                onToggle={handleToggleMyList}
+            />
+            <h2>Your list of art to see:</h2>
+            <ItemListTwo
+                artworks={yourList}
+                onToggle={handleToggleYourList}
+            />
+        </>
+    );
+};
+
+function ItemListTwo({ artworks, onToggle }) {
+    return (
+        <ul>
+            {artworks.map((artwork) => (
+                <li key={artwork.id}>
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={artwork.seen}
+                            onChange={(e) => {
+                                onToggle(
+                                    artwork.id,
+                                    e.target.checked
+                                );
+                            }}
+                        />
+                        {artwork.title}
+                    </label>
+                </li>
+            ))}
+        </ul>
     );
 }
