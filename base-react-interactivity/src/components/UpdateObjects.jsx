@@ -550,6 +550,85 @@ export function ReverseArray() {
         </>
     );
 };
-// Жаже если мы копируем массив, мы не можем изменять существующие элементы внутри массива напрямую. 
+// Даже если мы копируем массив, мы не можем изменять существующие элементы внутри массива напрямую. 
 // Это происходит потому, что копирование неглубокое - новый массив будет содержать те же элементы, что и исходный.
 // Если попытаться изменить массив при таких обстоятельствах, произойдет мутация. 
+
+// Данный фрагмент кода может вызвать проблему
+// const nextList = [...list];
+// nextList[0].seen = true; // Мутириует list[0]
+// setList(nextList);
+
+
+export function UpdateObjectsInsideArray() {
+    let nextId = 3;
+    const initialList = [
+        {id: 0, title: 'title-0', seen: 'false'},
+        {id: 1, title: 'title-1', seen: 'false'},
+        {id: 2, title: 'title-2', seen: 'true'},
+    ];
+
+    const [myList, setMyList] = useState(initialList);
+    const [yourList, setYourList] = useState(initialList);
+
+    function handleToggleMyList(artworkId, nextSeen) {
+        const myNextList = [...myList];
+        const artwork = myNextList.find(
+            a => a.id === artworkId
+        );
+        artwork.seen = nextSeen;
+        setMyList(myNextList);
+    };
+
+    function handleToggleYourList(artworkId, nextSeen) {
+        const yourNextList = [...yourList];
+        const artwork = yourNextList.find(
+            a => a.id === artworkId
+        );
+        artwork.seen = nextSeen;
+        setYourList(yourNextList);
+    };
+
+    return (
+        <>
+            <div className="update-in-array-container">
+                <h3>Какие-то списки</h3>
+                <p>Мой список</p>
+                <ItemList
+                    artworks={myList}
+                    onToggle={handleToggleMyList}
+                />
+                <p>Твой/ваш список</p>
+                <ItemList 
+                    artworks={yourList}
+                    onToggle={handleToggleYourList}                    
+                />
+            </div>
+        </>
+    );
+};
+
+// Компонент, необходимый для отображения списков
+function ItemList({ artworks, onToggle }) {
+    return (
+      <ul>
+        {artworks.map(artwork => (
+          <li key={artwork.id}>
+            <label>
+              <input
+                type="checkbox"
+                checked={artwork.seen}
+                onChange={e => {
+                  onToggle(
+                    artwork.id,
+                    e.target.checked
+                  );
+                }}
+              />
+              {artwork.title}
+            </label>
+          </li>
+        ))}
+      </ul>
+    );
+}
