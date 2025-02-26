@@ -4,6 +4,7 @@ import { useState } from 'react';
 import StateManaging from './components/StateManaging';
 import { ChoosingStateStructure } from './components/StateManaging';
 import { SharingState } from './components/StateManaging';
+import { SaveAndResetState } from './components/StateManaging';
 
 export default function App() {
   return (
@@ -19,6 +20,9 @@ export default function App() {
         <hr></hr>
         <h2>Как делиться состоянием с несколькими компонентами, что бы оно выполнялось одновременно у 2х и более компонентов?</h2>
         <SharingState />
+        <hr></hr>
+        <h2>Сохранение и сброс состояния</h2>
+        <SaveAndResetState />
       </div>
     </>
   )

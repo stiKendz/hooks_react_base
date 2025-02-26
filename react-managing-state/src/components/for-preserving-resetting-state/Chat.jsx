@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function() {
+export default function Chat({ contact }) {
     const [text, setText] = useState('');
     return (
         <>
@@ -11,7 +11,7 @@ export default function() {
                     onChange={e => setText(e.target.value)}
                 />
                 <br />
-                <button>Отправить сообщение для {contacts.email}</button>
+                <button>Отправить сообщение для {contact.email}</button>
             </section>
         </>
     );
