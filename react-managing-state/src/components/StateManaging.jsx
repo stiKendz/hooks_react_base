@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useReducer } from "react";
 import { useState } from "react";
 
 import Chat from './for-preserving-resetting-state/Chat';
 import ContactList from "./for-preserving-resetting-state/ContactList";
+
+import AddTask from './for-state-reducer/AddTask';
+import TaskList from './for-state-reducer/TaskList';
 
 // Введение в управление состоянем
 // Имспользуя React, мы не пишем комманды на подобии - "disable button", "show message" и т.д.
@@ -247,4 +250,84 @@ const contacts = [
 // React позволяет отменить поведение по умолчанию и принудить компонент сбросить свое состояние, -
 // - передав ему другой key, например <Chat key={email} />.
 // <Chat key={to.email} contact={to}/> - сообщает React-у о том, что если получатель чата другой, - 
-// - он долженг рассматриваться как другой компонент Chat, который должен быть создан заново с новыми данными.  
+// - он долженг рассматриваться как другой компонент Chat, который должен быть создан заново с новыми данными. 
+
+// Извлечение логики состояния в изменитель - ???
+export function StateReducer() {
+    const [tasks, dispatch] = useReducer(
+        tasksReducer,
+        initialTasks
+    )
+
+    function handleAddTask(text) {
+        dispatch({
+            type: 'added',
+            nextId: nextId++,
+            text: text
+        })
+    }
+
+    function handleChangeTask(task) {
+        dispatch({
+            type: 'changed',
+            task: task
+        })
+    }
+
+    function handleDeleteTask(taskId) {
+        dispatch({
+            type: 'deleted',
+            id: taskId
+        })
+    }
+
+    return (
+        <>
+            <div className="state-reducer-container">
+                <p>Пражская литература</p>
+                <AddTask 
+                    onAddTask={handleAddTask}
+                />
+                <TaskList 
+                    tasks={tasks}
+                    onChangeTask={handleChangeTask}
+                    onDeleteTask={handleDeleteTask}
+                />
+            </div>
+        </>
+    );
+};
+
+function tasksReducer(tasks, action) {
+    switch (action.type) {
+        case 'added' : {
+            return [...tasks, {
+                id: action.id,
+                text: action.text,
+                done: false
+            }];
+        }
+        case 'changed': {
+            return tasks.map(t => {
+                if (t.id === action.task.id) {
+                    return action.task;
+                } else {
+                    return t;
+                }
+            });
+        }
+        case 'deleted': {
+            return tasks.filter(t => t.id !== action.id);
+        }
+        default: {
+            throw Error('Неопознанное действие' + action.type);
+        }
+    }
+};
+
+let nextId = 3;
+const initialTasks = [
+  { id: 0, text: 'Visit Kafka Museum', done: true },
+  { id: 1, text: 'Watch a puppet show', done: false },
+  { id: 2, text: 'Lennon Wall pic', done: false }
+];

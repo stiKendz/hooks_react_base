@@ -5,6 +5,7 @@ import StateManaging from './components/StateManaging';
 import { ChoosingStateStructure } from './components/StateManaging';
 import { SharingState } from './components/StateManaging';
 import { SaveAndResetState } from './components/StateManaging';
+import { StateReducer } from './components/StateManaging';
 
 export default function App() {
   return (
@@ -23,6 +24,9 @@ export default function App() {
         <hr></hr>
         <h2>Сохранение и сброс состояния</h2>
         <SaveAndResetState />
+        <hr></hr>
+        <h2>Извлечение логики состояния в изменитель - ???</h2>
+        <StateReducer />
       </div>
     </>
   )
