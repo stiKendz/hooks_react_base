@@ -8,6 +8,7 @@ import { SaveAndResetState } from './components/StateManaging';
 import { StateReducer } from './components/StateManaging';
 import { ContextExample } from './components/StateManaging';
 import { ContextExampleUpgrade } from './components/StateManaging';
+import { ThroughTheComponents } from './components/StateManaging';
 
 export default function App() {
   return (
@@ -35,6 +36,9 @@ export default function App() {
         <hr></hr>
         <h2>Использование и предоставление контекста из одного и того же компонента.</h2>
         <ContextExampleUpgrade />
+        <hr></hr>
+        <h2>Элементы между объектом предоставляющим контекст, и объектом использующим его.</h2>
+        <ThroughTheComponents />
       </div>
     </>
   )

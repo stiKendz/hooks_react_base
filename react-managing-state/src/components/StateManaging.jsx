@@ -9,9 +9,11 @@ import TaskList from './for-state-reducer/TaskList';
 
 import Heading from "./for-context-example/Heading";
 import Section from "./for-context-example/Section";
-import { LevelContext } from "./for-context-example/LevelContext";
 import UpgradeSection from "./for-context-example/upgradeSection";
 import UpgradeHeading from "./for-context-example/UpgradeHeading";
+
+import ThroughHeading from './for-through-the-components/ThroughHeading.jsx';
+import ThroughSection from './for-through-the-components/ThroughSection.jsx';
 
 // Введение в управление состоянем
 // Имспользуя React, мы не пишем комманды на подобии - "disable button", "show message" и т.д.
@@ -436,3 +438,86 @@ export function ContextExampleUpgrade() {
 };
 // Чтобы не вводить параметр level для каждой секции вручную -<Section level={4}>- используется конструкция из -
 // - /components/UpgradeSection.jsx
+
+// Между компонентом, который предоставляет контекст, и компонентом, который его использует, можно вставить сколько угодно компонентов.
+// Прохождение контекста через промежуточные компоненты
+export function ThroughTheComponents() {
+    return (
+        <>
+            <div className="through-the-components-container">
+                <ThroughSection>
+                    <ThroughHeading>Мой профиль</ThroughHeading>
+                    <Post 
+                        title='Привет путешевственник'
+                        body='Прочтите про мои приключения'
+                    />
+                    <AllPosts />
+                </ThroughSection>
+            </div>
+        </>
+    );
+};
+
+function AllPosts() {
+    return (
+        <>
+            <ThroughSection>
+                <ThroughHeading>Публикации</ThroughHeading>
+                <RecentPosts />
+            </ThroughSection>
+        </>
+    )
+}
+
+function RecentPosts() {
+    return (
+        <ThroughSection>
+            <ThroughHeading>Последние публикации</ThroughHeading>
+            <Post 
+                title='Ароматы Лиссабона'
+                body='... это Паштел-де-ната'
+            />
+            <Post 
+                title='Буэнос-Айрес это ритм танго'
+                body='я люблю это!'
+            />
+        </ThroughSection>
+    );
+};
+
+function Post({ title, body }) {
+    return (
+        <ThroughSection isFancy={true}>
+            <ThroughHeading>{title}</ThroughHeading>
+            <p>
+                <i>{body}</i>
+            </p>
+        </ThroughSection>
+    );
+}
+
+// В этом примере один и тот же компонент Post отображается на двух разных уровнях вложенности. 
+// <Heading> внутри него (Внутри Post) получает свой уровень автоматически от ближайшего <Section>.
+// <Section> определяет контекст для дерева внутри нее, поэтому можно вставить <Heading> куда угодно, и он будет иметь правильный размер.
+
+// Контекст позволяет писать компоненты, которые "адаптируются" к окружению, -> 
+// и отображаются по разному в зависимости от того где, или, вернее, в каком контексте они отображаются. 
+
+// !!! Работа контекста может напомнить вам наследование CSS свойств. 
+// В CSS вы можете указать color: blue для div, и любой DOM-узел внутри него, независимо от глубины, унаследует этот цвет, ->
+// -> если только какой-либо другой DOM-узел в середине не переопределит его с color: green. 
+// Аналогично, в React единственный способ переопределить какой-то контекст, идущий сверху, - это обернуть дочерние элементы в провайдер контекста с другим значением.
+
+// В CSS различные свойства, такие как color и background-color, не отменяют друг друга. Мы можем установить color всех div в красный цвет, не влияя на background-color.
+// Аналогично, различные контексты React не отменяют друг друга. 
+// Каждый контекст, который мы создаем с помощью createContext(), полностью отделен от других, и связывает вместе компоненты, -> 
+// -> использующие и предоставляющие этот конкретный контекст. Один компонент может использовать или предоставлять множество различных контекстов без проблем.
+
+// Прежде чем использовать контекст, можно использовать альтернативы в виде:
+// 1.Передачи пропсов через дюжину компонентов вниз. Это более трудоемкая задача, но так становится ясно, какие компоненты используют те или иные данные.
+// 2.Извлечение компонента и передача JSX как children к ним. Если мы передаем некоторые данные через множество уровней промежуточных компонентов, ->
+// которые не используют эти данные (и передают их только дальше вниз), это часто означает, что мы забыли извлечь некоторые компоненты по пути.
+// Например, мы передаём пропсы данных, такие как posts, визуальным компонентам, которые не используют их напрямую, например <Layout posts={posts} />. 
+// Вместо этого, лучше заставить Layout принимать children в качестве пропса и выводить <Layout><Posts posts={posts} /></Layout>.
+// Это уменьшает количество уровней между компонентом, задающим данные, и компонентом, которому они нужны.
+
