@@ -6,6 +6,8 @@ import { ChoosingStateStructure } from './components/StateManaging';
 import { SharingState } from './components/StateManaging';
 import { SaveAndResetState } from './components/StateManaging';
 import { StateReducer } from './components/StateManaging';
+import { ContextExample } from './components/StateManaging';
+import { ContextExampleUpgrade } from './components/StateManaging';
 
 export default function App() {
   return (
@@ -25,8 +27,14 @@ export default function App() {
         <h2>Сохранение и сброс состояния</h2>
         <SaveAndResetState />
         <hr></hr>
-        <h2>Извлечение логики состояния в изменитель - ???</h2>
+        <h2>Извлечение логики состояния в редуктор</h2>
         <StateReducer />
+        <hr></hr>
+        <h2>Глубокая передача параметров через контекст. Альтернатива пропсам - ?</h2>
+        <ContextExample />
+        <hr></hr>
+        <h2>Использование и предоставление контекста из одного и того же компонента.</h2>
+        <ContextExampleUpgrade />
       </div>
     </>
   )

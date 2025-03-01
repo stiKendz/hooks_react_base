@@ -7,6 +7,12 @@ import ContactList from "./for-preserving-resetting-state/ContactList";
 import AddTask from './for-state-reducer/AddTask';
 import TaskList from './for-state-reducer/TaskList';
 
+import Heading from "./for-context-example/Heading";
+import Section from "./for-context-example/Section";
+import { LevelContext } from "./for-context-example/LevelContext";
+import UpgradeSection from "./for-context-example/upgradeSection";
+import UpgradeHeading from "./for-context-example/UpgradeHeading";
+
 // Введение в управление состоянем
 // Имспользуя React, мы не пишем комманды на подобии - "disable button", "show message" и т.д.
 // Мы описываем пользовательский интерфейс, который хотим видеть для различных состояний компонента - 
@@ -252,7 +258,10 @@ const contacts = [
 // <Chat key={to.email} contact={to}/> - сообщает React-у о том, что если получатель чата другой, - 
 // - он долженг рассматриваться как другой компонент Chat, который должен быть создан заново с новыми данными. 
 
-// Извлечение логики состояния в изменитель - ???
+// Извлечение логики состояния в редуктор 
+// Компоненты с большим количеством обновлений состояния, распределенных по многим обработчикам событий, - 
+// - могут стать непомерно сложными. 
+// В таких случаях мы можем объединить всю логику обновления состояния за пределами вашего компонента в одной функции, называемой редуктором
 export function StateReducer() {
     const [tasks, dispatch] = useReducer(
         tasksReducer,
@@ -331,3 +340,99 @@ const initialTasks = [
   { id: 1, text: 'Watch a puppet show', done: false },
   { id: 2, text: 'Lennon Wall pic', done: false }
 ];
+
+// Глубокая передача данных с помощью контекста
+// Передача информации с помощью пропсов может стать многословной и неудобной, если нам нужно передавать их через -
+// множество компонентов или если многимкомпонентам нужнаодна и та же информация.
+// Контекст, позволяет родительскому компоненту сделать некоторую информацию доступной для любого компонента в дереве под ним - 
+// -независимо от глубины, без явной передачи ее через параметры (пропсы).
+
+// Контекст позволяет родительскому компоненту предоставлять данные всему дереву под ним. 
+export function ContextExample() {
+    return (
+        <>
+            <div className="context-example-container">
+                <Section level={1}>
+                    <Heading>Название</Heading>
+                    <Section level={2}>
+                        <Heading>Заголовок</Heading>
+                        <Heading>Заголовок</Heading>
+                        <Heading>Заголовок</Heading>
+                        <Section level={3}>
+                            <Heading>Подзаголовок</Heading>
+                            <Heading>Подзаголовок</Heading>
+                            <Heading>Подзаголовок</Heading>
+                            <Section level={4}>
+                                <Heading>Под-под-заголовок</Heading>
+                                <Heading>Под-под-заголовок</Heading>
+                                <Heading>Под-под-заголовок</Heading>
+                            </Section>
+                        </Section>
+                    </Section>
+                </Section>
+            </div>
+        </>
+    );
+};
+// !!! <Section level = {1}> РОДИТЕЛЬСКИЙ ДЛЯ <Section level = {2}> и т.д
+
+// Heading.jsx - Вмещает в себя текст, контролируя его размер через <h></h>-теги с помощью level 
+// (принимает level для своего размера). - 10 строчка.
+// Section.jsx - Вмещает в себя дочерний элемент, в данном случае Heading.jsx. - 11 строчка.
+// LevelContext.jsx - В этом файле создается контекст, который в дальшейшем будут использовать компоненты. - 12 строчка.
+
+// <Section level={3}>
+//      <Heading>About</Heading>
+//      <Heading>Photos</Heading>
+//      <Heading>Videos</Heading>
+// </Section>
+// Как Heading смодет узнать, параметр level - ? (нужно, что бы он запрашивал данные откуда-то выше). 
+// Используем для этого контекст. 
+
+
+//                 <Section level={1}>
+//                      <Heading>Название</Heading>
+//                 </Section> - пока что не будет рабоать, т.к React не знает где взять контекст. (мы его используем, но всё еще
+// не предоставили). 
+
+// !!! Здесь имеется ввиду, что пока компонент использует такое предоставление level компонентам, все заголовки будут = 1 -
+// - как указано в дефолтном значении - const LevelContext = createContext(1). (1) - дефолтное значение.
+// Для того, что бы такая структра заработала как надо, нужно предоставить контекст с помощью -
+// - <LevelContext.Provider value={level}> в Section.jsx. !!!
+
+// <LevelContext.Provider value={level}> - используется для того, чтобы можно было передать параметр в родительский компонент, и -
+// - таким образом регулировать поведение дочерних компонентов, использующих этот параметр, не обращаясь к каждому из них по отдельности.
+
+// ???!!! Но почему у меня всё работает корректно и с этой структурой, без <LevelContext.Provider> !!!???
+// upd - так и не понял в чем проблема
+
+
+// Использование и предоставление контекста из одного и того же компонента.
+export function ContextExampleUpgrade() {
+    return (
+        <>
+            <div className="upgraded-context-example-container">
+                <UpgradeSection>
+                    <UpgradeHeading>Название</UpgradeHeading>
+                    <UpgradeSection>
+                        <UpgradeHeading>Заголовок</UpgradeHeading>
+                        <UpgradeHeading>Заголовок</UpgradeHeading>
+                        <UpgradeHeading>Заголовок</UpgradeHeading>
+                        <UpgradeSection>
+                            <UpgradeHeading>Подзаголовок</UpgradeHeading>
+                            <UpgradeHeading>Подзаголовок</UpgradeHeading>
+                            <UpgradeHeading>Подзаголовок</UpgradeHeading>
+                            <UpgradeSection>
+                                <UpgradeHeading>Под-под-заголовок</UpgradeHeading>
+                                <UpgradeHeading>Под-под-заголовок</UpgradeHeading>
+                                <UpgradeHeading>Под-под-заголовок</UpgradeHeading>
+                            </UpgradeSection>
+                        </UpgradeSection>
+                    </UpgradeSection>
+                </UpgradeSection>
+            </div>
+        </>
+    );
+};
+// Чтобы не вводить параметр level для каждой секции вручную -<Section level={4}>- используется конструкция из -
+// - /components/UpgradeSection.jsx
