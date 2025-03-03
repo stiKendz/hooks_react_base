@@ -9,6 +9,7 @@ import { StateReducer } from './components/StateManaging';
 import { ContextExample } from './components/StateManaging';
 import { ContextExampleUpgrade } from './components/StateManaging';
 import { ThroughTheComponents } from './components/StateManaging';
+import { ScalingUpWithReducerContext } from './components/StateManaging';
 
 export default function App() {
   return (
@@ -39,6 +40,9 @@ export default function App() {
         <hr></hr>
         <h2>Элементы между объектом предоставляющим контекст, и объектом использующим его.</h2>
         <ThroughTheComponents />
+        <hr></hr>
+        <h2>Масштабирование при помощи Reducer и Context.</h2>
+        <ScalingUpWithReducerContext />
       </div>
     </>
   )
