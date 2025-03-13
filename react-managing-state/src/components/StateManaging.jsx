@@ -15,6 +15,9 @@ import UpgradeHeading from "./for-context-example/UpgradeHeading";
 import ThroughHeading from './for-through-the-components/ThroughHeading.jsx';
 import ThroughSection from './for-through-the-components/ThroughSection.jsx';
 
+import AddTaskRC from "./for-reducer-context/AddTaskRC.jsx";
+import TaskListRC from "./for-reducer-context/TaskListRC.jsx";
+
 // Введение в управление состоянем
 // Имспользуя React, мы не пишем комманды на подобии - "disable button", "show message" и т.д.
 // Мы описываем пользовательский интерфейс, который хотим видеть для различных состояний компонента - 
@@ -560,13 +563,87 @@ function Post({ title, body }) {
 // Это уменьшает количество уровней между компонентом, задающим данные, и компонентом, которому они нужны.
 
 
-// Масштабирование, используя Reducer и Context.
-export function ScalingUpWithReducerContext() {
+// Масштабирование, расширение, используя Reducer и Context.
+export default function ScalingUpWithReducerContext() {
+    const [tasks, dispatch] = useReducer(
+        tasksReducer,
+        initialTasks
+    );
+
+    function handleAddTask(text) {
+        dispatch({
+            type: 'added',
+            id: nextId++,
+            text: text,
+        });
+    }
+
+    function handleChangeTask(task) {
+        dispatch({
+            type: 'changed',
+            task: task,
+        });
+    }
+
+    function handleDeleteTask(taskId) {
+        dispatch({
+            type: 'deleted',
+            id: taskId,
+        });
+    }
+
     return (
         <>
-            <div className="scaling-up-container">
-
-            </div>
+            <h1>Day off in Kyoto</h1>
+            <AddTaskRC onAddTask={handleAddTask} />
+            <TaskListRC
+                tasks={tasks}
+                onChangeTask={handleChangeTask}
+                onDeleteTask={handleDeleteTask}
+            />
         </>
     );
-};
+}
+
+function tasksReducer(tasks, action) {
+    switch (action.type) {
+        case 'added': {
+            return [
+                ...tasks,
+                {
+                    id: action.id,
+                    text: action.text,
+                    done: false,
+                },
+            ];
+        }
+        case 'changed': {
+            return tasks.map((t) => {
+                if (t.id === action.task.id) {
+                    return action.task;
+                } else {
+                    return t;
+                }
+            });
+        }
+        case 'deleted': {
+            return tasks.filter((t) => t.id !== action.id);
+        }
+        default: {
+            throw Error('Unknown action: ' + action.type);
+        }
+    }
+}
+
+// код выше исппользует:
+// let nextId = 3;
+// const initialTasks = [
+//  { id: 0, text: 'Visit Kafka Museum', done: true },
+//  { id: 1, text: 'Watch a puppet show', done: false },
+//  { id: 2, text: 'Lennon Wall pic', done: false }
+// ];
+
+// По мере роста вашего приложения мы можем столкнуться с другой трудностью. 
+// Состояние tasks и функция dispatch доступны только в компоненте верхнего уровня TaskAppRC.
+// Чтобы позволить другим компонентам читать список задач или изменять его, мы должны явно передать вниз текущее ->
+// -> состояние и обработчики событий, которые изменяют его, как пропсы.

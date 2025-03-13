@@ -41,7 +41,7 @@ export default function App() {
         <h2>Элементы между объектом предоставляющим контекст, и объектом использующим его.</h2>
         <ThroughTheComponents />
         <hr></hr>
-        <h2>Масштабирование при помощи Reducer и Context.</h2>
+        <h2>Масштабирование, расширение и объединение при помощи Reducer и Context.</h2>
         <ScalingUpWithReducerContext />
       </div>
     </>
