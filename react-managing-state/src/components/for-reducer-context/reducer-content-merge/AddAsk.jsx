@@ -1,11 +1,9 @@
-import React from 'react'
-import { useState, useContext } from 'react'
-import { TasksDispatchContextRC } from './TasksContextRC';
+import { useState } from 'react';
+import { useTasksDispatch } from './TasksProvider';
 
-export default function AddTaskRC() {
+export default function AddAsk() {
     const [text, setText] = useState('');
-    const dispatch = useContext(TasksDispatchContextRC);
-
+    const dispatch = useTasksDispatch();
     return (
         <>
             <input

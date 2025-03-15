@@ -11,6 +11,8 @@ import { ContextExampleUpgrade } from './components/StateManaging';
 import { ThroughTheComponents } from './components/StateManaging';
 import { ScalingUpWithReducerContext } from './components/StateManaging';
 
+import TaskApp from './components/for-reducer-context/reducer-content-merge/TaskApp';
+
 export default function App() {
   return (
     <>
@@ -43,6 +45,8 @@ export default function App() {
         <hr></hr>
         <h2>Масштабирование, расширение и объединение при помощи Reducer и Context.</h2>
         <ScalingUpWithReducerContext />
+        <h3>Более лаконичный и удобный вариант того, что нахожится выше - в плане записи кода, и распределения компонентов, кода по ним.</h3>
+        <TaskApp />
       </div>
     </>
   )

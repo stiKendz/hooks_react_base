@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useContext, useReducer } from "react";
 import { useState } from "react";
 
 import Chat from './for-preserving-resetting-state/Chat';
@@ -17,6 +17,9 @@ import ThroughSection from './for-through-the-components/ThroughSection.jsx';
 
 import AddTaskRC from "./for-reducer-context/AddTaskRC.jsx";
 import TaskListRC from "./for-reducer-context/TaskListRC.jsx";
+import { TasksContextRC } from './for-reducer-context/TasksContextRC.jsx';
+import { TasksDispatchContextRC } from "./for-reducer-context/TasksContextRC.jsx";
+
 
 // Введение в управление состоянем
 // Имспользуя React, мы не пишем комманды на подобии - "disable button", "show message" и т.д.
@@ -373,7 +376,7 @@ function tasksReducer(tasks, action) {
 // -> (в данном случае, функцию dispatch), -> 
 // -> но есть небольшие отличия Reducer от State:
 // 1. Reducer принимает 2 аргумента: reducer-функцию, и начальное состояние.
-// 2. Возвращает: значение с сохраненным состоянием, функцию отправки действий польщователя ->
+// 2. Возвращает: значение с сохраненным состоянием, функцию отправки действий пользователя ->
 // -> в Reducer (редуктор) - dispatch.
 
 let nextId = 3;
@@ -564,48 +567,51 @@ function Post({ title, body }) {
 
 
 // Масштабирование, расширение, используя Reducer и Context.
-export default function ScalingUpWithReducerContext() {
+// // ...RC.jsx -> RC - обозначение папки с дополнительными компонентами (reducer-context, в данном случае).
+export function ScalingUpWithReducerContext() {
     const [tasks, dispatch] = useReducer(
-        tasksReducer,
+        tasksReducerRC,
         initialTasks
     );
 
-    function handleAddTask(text) {
-        dispatch({
-            type: 'added',
-            id: nextId++,
-            text: text,
-        });
-    }
+    // После предоставления dispatch-функции в контексте, функции ниже больше не нужны. 
+    // function handleAddTask(text) {
+    //     dispatch({
+    //         type: 'added',
+    //         id: nextId++,
+    //         text: text,
+    //     });
+    // }
 
-    function handleChangeTask(task) {
-        dispatch({
-            type: 'changed',
-            task: task,
-        });
-    }
+    // function handleChangeTask(task) {
+    //     dispatch({
+    //         type: 'changed',
+    //         task: task,
+    //     });
+    // }
 
-    function handleDeleteTask(taskId) {
-        dispatch({
-            type: 'deleted',
-            id: taskId,
-        });
-    }
+    // function handleDeleteTask(taskId) {
+    //     dispatch({
+    //         type: 'deleted',
+    //         id: taskId,
+    //     });
+    // }
 
     return (
         <>
-            <h1>Day off in Kyoto</h1>
-            <AddTaskRC onAddTask={handleAddTask} />
-            <TaskListRC
-                tasks={tasks}
-                onChangeTask={handleChangeTask}
-                onDeleteTask={handleDeleteTask}
-            />
+            <TasksContextRC.Provider value={tasks}> {/* предоставляем всему дереву контекст (состояние tasks)*/}
+                <TasksDispatchContextRC.Provider value={dispatch}> {/* предоставляем всему дереву контекст (dispatch-функции)*/}
+                    <h1>Day off in Kyoto</h1>
+                    <AddTaskRC />
+                    <TaskListRC />
+                </TasksDispatchContextRC.Provider>
+            </TasksContextRC.Provider>
         </>
     );
 }
 
-function tasksReducer(tasks, action) {
+// Описние dispatch-функций в Reducer.
+function tasksReducerRC(tasks, action) {
     switch (action.type) {
         case 'added': {
             return [
@@ -635,7 +641,8 @@ function tasksReducer(tasks, action) {
     }
 }
 
-// код выше исппользует:
+
+// код выше исппользует: (список для наших задач) --- 382 строка
 // let nextId = 3;
 // const initialTasks = [
 //  { id: 0, text: 'Visit Kafka Museum', done: true },
@@ -643,7 +650,47 @@ function tasksReducer(tasks, action) {
 //  { id: 2, text: 'Lennon Wall pic', done: false }
 // ];
 
-// По мере роста вашего приложения мы можем столкнуться с другой трудностью. 
+// По мере роста нашего приложения мы можем столкнуться с другой трудностью. 
 // Состояние tasks и функция dispatch доступны только в компоненте верхнего уровня TaskAppRC.
 // Чтобы позволить другим компонентам читать список задач или изменять его, мы должны явно передать вниз текущее ->
 // -> состояние и обработчики событий, которые изменяют его, как пропсы.
+
+// Например, ScalingUpWithReducerContext передает список задач и обработчики событий в TaskListRC:
+{/* <TaskList
+    tasks={tasks}
+    onChangeTask={handleChangeTask}
+    onDeleteTask={handleDeleteTask}
+/> */}
+
+// А TaskList передает обработчики событий в Task:
+// <Task
+//     task={task}
+//     onChange={onChangeTask}
+//     onDelete={onDeleteTask}
+// />
+
+// В примере, где используется небольшое число компонентов, это удобно и понятно. В случае, если компонентов 10 и больше, ->
+// -> можно объединить useReducer и useContext -> поместить состояние tasks и функцию dispatch в контекст (альтернатива пропсам).
+// Таким образом, любой компонент ниже ScalingUpWithReducerContext в дереве может читать задачи и отправлять действия без повторяющегося
+// "бурения пропсов".
+
+// 1. Создаем контекст (TasksContextRC.jsx).
+// 2. Помещаем состояние и dispatch-функцию в созданный контекст (в компоненте TasksContextRC.jsx).
+// 2.1. Через Provider делаем так, чтобы всё дерево (разметка) имело доступ к созданному нами контексту ->
+// <TasksContextRC.Provider value={tasks}> и <TasksDispatchContextRC.Provider value={dispatch}>
+// 3. Используем контекст в любом месте нашего дерева. ->
+// const tasks = useContext(TasksContextRC), const tasks = useContext(TasksContextRC) -> (All RC(for-reduce-context) files).
+
+// Компонент ScalingUpWithReducerContext не передает никаких обработчиков событий вниз, ->
+// -> а TaskListRC также не передает никаких обработчиков событий компоненту Task. 
+// Каждый компонент считывает контекст, который ему необходим.
+
+// Итог:
+// Состояние по-прежнему "живет" в компоненте верхнего уровня ScalingUpWithReducerContext, управляемом с помощью useReducer.
+// Но его tasks и dispatch-функции теперь доступны каждому компоненту ниже в дереве путем импорта и использования этих контекстов.
+
+
+// Можно ещё больше упростить код, переместив контекст и Reducer в один файл. Но это делать не обязатаельно.
+// Так приложение будет более струкурированным,гибким в плане добавления новых возможностей. 
+// (for-reducer-context/reducer-content-merge)
+
